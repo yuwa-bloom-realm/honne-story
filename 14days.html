@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>14日間の小さな冒険 — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0c0916; --cream:#f0eade; --cream-dim:rgba(240,234,222,0.78);
+  --gold:#c9a84c; --gold-lt:#e8d5a3; --gold-dim:rgba(201,168,76,0.3);
+  --purple:rgba(45,27,78,0.85);
+  --font-body:'Noto Serif JP',serif;
+  --font-title:'Shippori Mincho',serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:17px;}
+body{background:var(--bg);color:var(--cream);font-family:var(--font-body);line-height:1.9;}
+
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d) var(--delay) infinite alternate ease-in-out;}
+@keyframes twinkle{
+  from{opacity:0.08;}
+  to{opacity:0.75;}
+}
+
+main{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:0 22px 80px;}
+
+/* ヒーロー */
+.hero{text-align:center;padding:48px 0 32px;}
+.hero-img{width:100%;max-height:220px;object-fit:cover;border-radius:6px;margin-bottom:28px;opacity:0.85;}
+.orn{color:var(--gold);font-size:13px;letter-spacing:10px;opacity:0.5;margin-bottom:20px;}
+.hero h1{font-family:var(--font-title);font-size:clamp(1.6rem,5vw,2.1rem);color:var(--gold-lt);margin-bottom:8px;line-height:1.4;}
+.hero-sub{font-size:0.78rem;letter-spacing:0.2em;color:rgba(201,168,76,0.55);margin-bottom:24px;}
+.lead{font-size:0.92rem;line-height:2.2;color:var(--cream-dim);}
+
+/* 区切り線 */
+.divider{width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:32px auto;opacity:0.45;}
+
+/* セクション */
+.section{margin:36px 0;}
+.section-title{
+  font-family:var(--font-title);font-size:1.1rem;color:var(--gold-lt);
+  margin-bottom:18px;padding-bottom:10px;
+  border-bottom:1px solid var(--gold-dim);
+  letter-spacing:0.05em;
+}
+.body-text{font-size:0.9rem;line-height:2.2;color:var(--cream-dim);}
+.body-text p{margin-bottom:10px;}
+.body-text em{font-style:normal;color:var(--gold-lt);}
+
+/* 受け取れるものリスト */
+.receive-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.receive-list li{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:0.9rem;line-height:1.8;color:var(--cream-dim);
+  padding:12px 16px;
+  background:rgba(45,27,78,0.35);
+  border:1px solid var(--gold-dim);
+  border-radius:6px;
+}
+.receive-list li::before{
+  content:'✦';color:var(--gold);font-size:0.75rem;
+  margin-top:3px;flex-shrink:0;
+}
+
+/* こんな方に */
+.for-who{display:flex;flex-direction:column;gap:10px;}
+.for-who-item{
+  padding:14px 18px;
+  background:linear-gradient(135deg,rgba(74,45,122,0.3),rgba(45,27,78,0.5));
+  border-left:3px solid var(--gold);
+  border-radius:0 6px 6px 0;
+  font-size:0.9rem;line-height:1.85;color:var(--cream-dim);
+}
+
+/* 変化ブロック */
+.change-list{display:flex;flex-direction:column;gap:12px;}
+.change-block{
+  background:linear-gradient(135deg,rgba(45,27,78,0.5),rgba(20,12,38,0.65));
+  border:1px solid var(--gold-dim);border-radius:6px;padding:18px 20px;
+}
+.change-num{font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);opacity:0.7;margin-bottom:6px;}
+.change-text{font-size:0.88rem;line-height:1.9;color:var(--cream-dim);}
+.change-text em{font-style:normal;color:var(--gold-lt);}
+
+/* ステップ */
+.step-list{display:flex;flex-direction:column;gap:18px;}
+.step{display:flex;gap:16px;align-items:flex-start;}
+.step-num{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.78rem;color:var(--gold);flex-shrink:0;margin-top:2px;
+}
+.step-body{flex:1;}
+.step-title{font-family:var(--font-title);font-size:0.95rem;color:var(--gold-lt);margin-bottom:6px;}
+.step-text{font-size:0.86rem;line-height:1.9;color:var(--cream-dim);}
+.step-example{
+  margin-top:8px;padding:10px 14px;
+  background:rgba(201,168,76,0.06);border-left:2px solid var(--gold-dim);
+  border-radius:0 4px 4px 0;
+  font-size:0.82rem;line-height:1.85;color:rgba(240,234,222,0.6);
+}
+
+/* 価格ボックス（目立つ通常価格つき） */
+.price-box{
+  background:linear-gradient(135deg,rgba(74,45,122,0.45),rgba(45,27,78,0.7));
+  border:1px solid var(--gold);border-radius:8px;
+  padding:32px 24px;text-align:center;margin:8px 0 24px;
+}
+.price-label{font-size:0.75rem;letter-spacing:0.2em;color:var(--gold);opacity:0.7;margin-bottom:16px;}
+.price-regular-wrap{margin-bottom:12px;}
+.price-regular-label{
+  display:inline-block;
+  font-size:0.78rem;color:rgba(240,234,222,0.5);
+  letter-spacing:0.08em;margin-bottom:4px;
+}
+.price-regular{
+  font-size:1.4rem;
+  color:rgba(240,234,222,0.45);
+  font-family:var(--font-title);
+  position:relative;
+  display:inline-block;
+}
+.price-regular::after{
+  content:'';
+  position:absolute;
+  left:-4px;right:-4px;
+  top:50%;
+  height:2px;
+  background:rgba(240,234,222,0.5);
+  transform:rotate(-4deg);
+}
+.price-arrow{font-size:1.2rem;color:var(--gold);opacity:0.6;margin:8px 0;}
+.price-special-label{
+  font-size:0.72rem;letter-spacing:0.15em;
+  color:var(--gold);margin-bottom:6px;
+}
+.price-main{
+  font-family:var(--font-title);font-size:2.4rem;
+  color:var(--gold-lt);margin-bottom:4px;
+  text-shadow:0 0 20px rgba(201,168,76,0.3);
+}
+.price-note{font-size:0.76rem;color:var(--cream-dim);opacity:0.6;line-height:1.8;margin-top:10px;}
+
+/* 申し込み案内 */
+.apply-notice{
+  background:rgba(201,168,76,0.06);border:1px solid var(--gold-dim);
+  border-radius:6px;padding:20px 22px;margin-bottom:20px;
+  font-size:0.86rem;line-height:2.1;color:var(--cream-dim);
+}
+.apply-keyword{
+  display:inline-block;
+  background:rgba(45,27,78,0.7);border:1px solid var(--gold-dim);
+  border-radius:4px;padding:4px 16px;
+  font-family:var(--font-title);color:var(--gold-lt);
+  letter-spacing:0.05em;margin:6px 0;
+}
+
+/* CTAボタン */
+.btn-main{
+  display:block;width:100%;
+  background:linear-gradient(135deg,#c9a84c,#e8d5a3);
+  border:none;border-radius:12px;padding:18px 20px;
+  color:#1a1520;font-family:var(--font-body);font-size:1rem;font-weight:600;
+  text-align:center;text-decoration:none;cursor:pointer;
+  box-shadow:0 4px 24px rgba(201,168,76,0.3);
+  transition:all 0.25s;margin-bottom:12px;letter-spacing:0.03em;
+}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,0.48);}
+.btn-sub{
+  display:block;width:100%;background:transparent;
+  border:1px solid rgba(240,234,222,0.22);border-radius:12px;
+  padding:15px 20px;color:var(--cream-dim);
+  font-family:var(--font-body);font-size:0.9rem;
+  text-align:center;text-decoration:none;cursor:pointer;
+  margin-bottom:20px;transition:all 0.25s;
+}
+.btn-sub:hover{border-color:var(--gold-dim);color:var(--gold-lt);}
+
+/* 振込 */
+.furikomi{
+  background:rgba(45,27,78,0.4);border:1px solid var(--gold-dim);
+  border-radius:6px;padding:20px 22px;
+  font-size:0.84rem;line-height:2.0;color:var(--cream-dim);
+  display:none;margin-bottom:16px;
+}
+.furikomi.open{display:block;}
+.furikomi table{width:100%;border-collapse:collapse;margin-top:10px;}
+.furikomi td{padding:7px 10px;border-bottom:1px solid rgba(201,168,76,0.1);vertical-align:top;}
+.furikomi td:first-child{color:var(--gold);opacity:0.75;white-space:nowrap;width:42%;}
+
+/* FAQ */
+.faq-item{border-bottom:1px solid var(--gold-dim);padding:18px 0;}
+.faq-q{
+  font-size:0.9rem;color:var(--gold-lt);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.faq-q::after{content:'＋';font-size:1rem;color:var(--gold);opacity:0.6;flex-shrink:0;transition:transform 0.25s;}
+.faq-item.open .faq-q::after{transform:rotate(45deg);}
+.faq-a{
+  font-size:0.86rem;line-height:1.95;color:var(--cream-dim);
+  max-height:0;overflow:hidden;transition:max-height 0.35s ease;
+}
+.faq-item.open .faq-a{max-height:800px;padding-top:12px;}
+
+.btn-top{
+  background:none;border:none;color:rgba(240,234,222,0.3);
+  font-family:var(--font-body);font-size:0.78rem;cursor:pointer;
+  letter-spacing:0.12em;display:block;text-align:center;
+  margin-top:32px;transition:color 0.2s;
+}
+.btn-top:hover{color:rgba(240,234,222,0.7);}
+
+@media(max-width:400px){html{font-size:16px;}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<main>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="orn">✦ ✦ ✦</div>
+  <img class="hero-img" src="08_final_door.png" alt="14日間の小さな冒険" onerror="this.style.display='none'">
+  <h1>14日間の小さな冒険</h1>
+  <p class="hero-sub">— ひとりで頑張らない、ことばの LINE 伴走プログラム —</p>
+  <p class="lead">
+    さっきの物語で、あなたは<br>
+    モヤの中にいた小さな声を見つけました。<br><br>
+    こわかった気持ち。<br>
+    休みたかった気持ち。<br>
+    言いたかった気持ち。<br>
+    進みたかった気持ち。<br><br>
+    それは、弱さではありません。<br><br>
+    ずっと「大丈夫」と言いながら、<br>
+    心の奥にしまってきた<br>
+    あなたの大切な本音でした。<br><br>
+    でも、日常に戻ると、<br>
+    またいつものように<br>
+    「大丈夫」「私が我慢すればいい」<br>
+    「ひとりで何とかしなきゃ」<br>
+    と思ってしまう日があります。<br><br>
+    だから、この先には<br>
+    毎日ひとつずつ、<br>
+    必要なことばを受け取りながら進む<br>
+    <em style="font-style:normal;color:var(--gold-lt);">14日間の小さな冒険</em>があります。
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- このプログラムとは -->
+<section class="section">
+  <p class="section-title">14日間の小さな冒険とは？</p>
+  <div class="body-text">
+    <p>毎日届く短い物語と問いを通して、<em>自分にかける言葉を少しずつ変えていく</em>LINE 伴走型のプログラムです。</p>
+    <p>Zoom で話す講座ではありません。<br>でも、完全にひとりで進めるものでもありません。</p>
+    <p>あなたのペースで進みながら、LINE で小さくつながり続ける<em>「ことばの伴走」</em>です。</p>
+    <p>人に頼るのは少し苦手。でも、ひとりで頑張るとまた元に戻ってしまう。<br>誰かに全部話すのはしんどい。でも、そっと見守っていてほしい。</p>
+    <p>そんなあなたのための、14日間の小さな冒険です。</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- こんな方に -->
+<section class="section">
+  <p class="section-title">こんな方におすすめです</p>
+  <div class="for-who">
+    <div class="for-who-item">人に頼るのは少し苦手。でも、ひとりで頑張り続けるのもしんどい。</div>
+    <div class="for-who-item">Zoom で話すより、まずは自分のペースで向き合いたい。</div>
+    <div class="for-who-item">大きく変わるのは怖い。でも、自分にかける言葉を少しずつ変えてみたい。</div>
+    <div class="for-who-item">「大丈夫」と言いながら、本当は疲れている。</div>
+    <div class="for-who-item">自分の本音に気づきたいけれど、何から始めたらいいかわからない。</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 毎日の流れ -->
+<section class="section">
+  <p class="section-title">毎日の流れ</p>
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <p class="step-title">今日の物語を読む</p>
+        <p class="step-text">LINE に届く短い物語を読みます。その日のテーマに合わせて、今の自分の心を少しだけ見つめます。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <p class="step-title">今日の問いに答える</p>
+        <p class="step-text">物語のあとに、小さな問いが届きます。</p>
+        <div class="step-example">
+          「今日、少しだけ無理していたことは？」<br>
+          「本当は言いたかったことは？」<br>
+          「今の自分にかけたい言葉は？」
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <p class="step-title">ボトル＆カードアプリをひく</p>
+        <p class="step-text">その日のあなたに必要な色・カード・ことばの処方箋を受け取ります。ここで出たアファメーションが、その日のあなたに灯す言葉になります。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <p class="step-title">アファメーションを唱える</p>
+        <p class="step-text">受け取った言葉を、心の中で唱えたり声に出したりしてみます。すぐに信じられなくても大丈夫。「この言葉、今の私にどう響くかな？」と感じてみるだけで大丈夫です。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <p class="step-title">LINE に送る</p>
+        <p class="step-text">その日のアファメーションと、唱えてみて感じたことを LINE に送ってください。</p>
+        <div class="step-example">
+          今日のアファメーション：〇〇<br>
+          唱えてみて感じたこと：〇〇<br>
+          今日この言葉を使えそうな場面：〇〇<br><br>
+          「少し安心した」「胸がぎゅっとした」<br>
+          一言でも、ちゃんと一歩です。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 受け取れるもの -->
+<section class="section">
+  <p class="section-title">このプログラムで受け取れるもの</p>
+  <ul class="receive-list">
+    <li>14日分の短い物語</li>
+    <li>14日分の小さな問い</li>
+    <li>ボトル＆カードアプリの利用</li>
+    <li>その日のことばの処方箋</li>
+    <li>アファメーション実践ワーク</li>
+    <li>LINE でのアファメーション共有＆受け取り確認</li>
+    <li>最終日の振り返りメッセージ</li>
+  </ul>
+  <p style="font-size:0.78rem;color:rgba(240,234,222,0.4);margin-top:14px;line-height:1.8;">
+    ※無制限の個別相談ではありません。毎日受け取ったことばを LINE で共有しながら、小さく続けるための伴走プログラムです。
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- 期待できる変化 -->
+<section class="section">
+  <p class="section-title">14日間で期待できる変化</p>
+  <div class="change-list">
+    <div class="change-block">
+      <p class="change-num">01</p>
+      <p class="change-text">「大丈夫」と言う前に、<em>本音に気づきやすくなる</em><br>
+      反射的に「大丈夫です」と言ってしまう場面で、「本当は今どう感じてる？」と自分に聞けるようになります。</p>
+    </div>
+    <div class="change-block">
+      <p class="change-num">02</p>
+      <p class="change-text">不安なとき、<em>自分を責める言葉を減らせるようになる</em><br>
+      「私には無理」「どうせ変われない」そんな言葉が出てきたとき、今の自分に必要な言葉を選び直す練習ができます。</p>
+    </div>
+    <div class="change-block">
+      <p class="change-num">03</p>
+      <p class="change-text">疲れている自分に、<em>気づきやすくなる</em><br>
+      頑張り続ける前に「私、少し疲れているかも」と気づけるようになります。</p>
+    </div>
+    <div class="change-block">
+      <p class="change-num">04</p>
+      <p class="change-text">飲み込んだ気持ちを、<em>自分だけには認められるようになる</em><br>
+      まずは自分の中で「本当は嫌だった」「本当はわかってほしかった」と気づいてあげること。その小さな気づきが本音を置き去りにしない練習になります。</p>
+    </div>
+    <div class="change-block">
+      <p class="change-num">05</p>
+      <p class="change-text">変わりたい気持ちを、<em>小さな一歩に変えやすくなる</em><br>
+      今日の言葉をひとつ受け取る。少し感じてみる。その小さな一歩を重ねることで「私にもできるかもしれない」という感覚を育てていきます。</p>
+    </div>
+    <div class="change-block">
+      <p class="change-num">06</p>
+      <p class="change-text"><em>ひとりで抱え込む前に、戻ってこられる場所ができる</em><br>
+      完璧な答えを書く必要はありません。短い一言でも「今日の自分を見た」という大切な一歩になります。</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- なぜ14日間？ -->
+<section class="section">
+  <p class="section-title">なぜ14日間なの？</p>
+  <div class="body-text">
+    <p>変わるために必要なのは、一度の大きな決意よりも、<em>毎日小さく「自分にかける言葉」を変えていくこと</em>です。</p>
+    <p>でも、いきなり長期間がんばろうとすると、それだけで心が重くなってしまうことがあります。</p>
+    <p>だからまずは、14日間。<br>短すぎず、長すぎず、「少し続けてみよう」と思える小さな期間です。</p>
+    <p>14日間は、本当の自分を取り戻すための<em>最初の小さな冒険</em>です。</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 14日間後は？ -->
+<section class="section">
+  <p class="section-title">14日間が終わったあとも続けたい時は？</p>
+  <div class="body-text">
+    <p>14日間の最後に、今のあなたの変化を振り返るメッセージをお届けします。</p>
+    <p>希望される方には、次のステップをご案内します。</p>
+    <p>・もう一度14日間を続ける<br>
+    ・個別相談で今の本音を整理する<br>
+    ・継続サポートで、ことばの習慣を育てる<br>
+    ・さらに深く自分のテーマに向き合う</p>
+    <p>14日間は、「自分に必要な言葉を、自分にかけてあげる」という<em>新しい習慣を育てていくための入口</em>です。</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section class="section">
+  <p class="section-title">よくある質問</p>
+  <div class="faq-item">
+    <p class="faq-q">Zoom はありますか？</p>
+    <p class="faq-a">ありません。LINE で進めるプログラムです。顔出しや通話は必要ありません。</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">毎日長文を送らないといけませんか？</p>
+    <p class="faq-a">長文でなくて大丈夫です。その日に受け取ったアファメーションと、感じたことを一言でも大丈夫です。</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">相談し放題ですか？</p>
+    <p class="faq-a">無制限の個別相談ではありません。毎日のアファメーションの受け取り確認と、必要に応じた短い返信が中心です。深く話しながら整理したい方には、別途個別相談をご案内する場合があります。</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">できない日があったらどうなりますか？</p>
+    <p class="faq-a">できない日があっても大丈夫です。大切なのは完璧に続けることではなく、戻ってこられる場所を持つこと。できる日からまた、小さく再開していきましょう。</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">物語体験アプリだけでも変われますか？</p>
+    <p class="faq-a">物語体験アプリは、今のあなたの中にある本音に気づくための入口です。でも、日常に戻ると、また「大丈夫」と言ってしまう日もあります。14日間の小さな冒険は、その気づきを日常に灯し続けるための続きのプログラムです。</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">14日間で終了しても大丈夫ですか？</p>
+    <p class="faq-a">もちろんです。14日間だけでも完結できるプログラムです。続けることを前提にしたものではありません。</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 価格 -->
+<section class="section">
+  <div class="price-box">
+    <p class="price-label">参加費</p>
+    <div class="price-regular-wrap">
+      <p class="price-regular-label">通常価格</p>
+      <p class="price-regular">19,800円</p>
+    </div>
+    <p class="price-arrow">↓</p>
+    <p class="price-special-label">物語体験アプリ完成記念・初回限定価格</p>
+    <p class="price-main">9,800<span style="font-size:1.1rem;"> 円</span></p>
+    <p class="price-note">
+      ※今後は通常価格でのご案内を予定しています。<br>
+      ※初回価格は、予告なく終了する場合があります。
+    </p>
+  </div>
+
+  <!-- 申し込み案内 -->
+  <div class="apply-notice">
+    お申し込み後は、確認のため LINE に<br><br>
+    <span class="apply-keyword">14日間申込みました</span><br><br>
+    と送ってください。<br>
+    あわせて、決済時のお名前と開始希望日もお知らせください。<br><br>
+    確認でき次第、14日間の小さな冒険の進め方をご案内します。
+  </div>
+
+  <a href="https://square.link/u/JU9dURZ5?src=sheet" class="btn-main" target="_blank" rel="noopener">
+    💳 カード決済で参加する
+  </a>
+  <button class="btn-sub" onclick="toggleFurikomi('f1')">
+    🏦 銀行振込をご希望の方
+  </button>
+  <div class="furikomi" id="f1">
+    <p style="margin-bottom:10px;">以下の口座にお振込ください。</p>
+    <table>
+      <tr><td>銀行名</td><td>住信SBIネット銀行</td></tr>
+      <tr><td>銀行コード</td><td>0038</td></tr>
+      <tr><td>支店番号-口座番号</td><td>107-8418034</td></tr>
+      <tr><td>支店名</td><td>バナナ</td></tr>
+      <tr><td>カナ氏名</td><td>コジマサユリ</td></tr>
+    </table>
+    <p style="margin-top:14px;font-size:0.82rem;">
+      振込後に、LINE にて振込完了・振込名のわかるスクショを送ってください。<br>
+      ご入金確認後、14日間の小さな冒険の開始案内をお届けします。<br><br>
+      ※振込手数料はご負担をお願いいたします。
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 最後のメッセージ -->
+<section class="section">
+  <div class="body-text" style="text-align:center;line-height:2.4;">
+    <p>ひとりで頑張り続けなくていい。</p>
+    <p>でも、誰かに全部話さなくても大丈夫。</p>
+    <br>
+    <p>まずは14日間、<br>
+    毎日ひとつずつ<br>
+    自分に必要なことばを受け取りながら、<br>
+    本当のあなたを取り戻す小さな冒険を<br>
+    一緒に進めていきましょう。</p>
+  </div>
+</section>
+
+<!-- 再CTA -->
+<a href="https://square.link/u/JU9dURZ5?src=sheet" class="btn-main" target="_blank" rel="noopener">
+  💳 カード決済で参加する
+</a>
+<button class="btn-sub" onclick="toggleFurikomi('f2')">
+  🏦 銀行振込をご希望の方
+</button>
+<div class="furikomi" id="f2">
+  <p style="margin-bottom:10px;">振込先は上記と同じです。振込後に LINE でご連絡ください。</p>
+</div>
+
+<button class="btn-top" onclick="history.back()">← 物語に戻る</button>
+
+</main>
+
+<script>
+(function(){
+  const sf=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()>0.85?3:2;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;
+      width:${sz}px;height:${sz}px;--d:${2+Math.random()*5}s;--delay:${Math.random()*6}s;`;
+    sf.appendChild(s);
+  }
+})();
+
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>item.classList.toggle('open'));
+});
+
+function toggleFurikomi(id){
+  document.getElementById(id).classList.toggle('open');
+}
+</script>
+</body>
+</html>

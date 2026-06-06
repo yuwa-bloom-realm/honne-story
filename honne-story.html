@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>大丈夫の奥へ — 本音を見つける静かな旅</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0c0916;
+  --cream:     #f0eade;
+  --cream-dim: rgba(240,234,222,0.75);
+  --gold:      #c9a84c;
+  --gold-lt:   #e8d5a3;
+  --gold-dim:  rgba(201,168,76,0.35);
+  --purple:    #2d1b4e;
+  --purple-md: #4a2d7a;
+  --purple-lt: rgba(107,77,138,0.35);
+  --mist:      #d8d0ee;
+  --font-body: 'Noto Serif JP', serif;
+  --font-title:'Shippori Mincho', serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { font-size: 17px; }
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── 星空 ── */
+#stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute; border-radius: 50%; background: #fff;
+  animation: twinkle var(--d) var(--delay) infinite alternate ease-in-out;
+}
+@keyframes twinkle {
+  from { opacity: 0.08; transform: scale(1); }
+  to   { opacity: 0.7;  transform: scale(1.6); }
+}
+
+/* ── レイアウト ── */
+#app {
+  position: relative; z-index: 1;
+  max-width: 600px; margin: 0 auto;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  padding: 0 0 env(safe-area-inset-bottom, 16px);
+}
+
+/* ── シーン画像 ── */
+.scene-image {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  display: block;
+  opacity: 0.88;
+}
+.scene-image-placeholder {
+  width: 100%; height: 180px;
+  background: linear-gradient(160deg, #1a0e2e 0%, #0c0916 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px;
+  opacity: 0.7;
+}
+
+/* ── ストーリーエリア ── */
+#story-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 18px 8px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── ナレーション ── */
+.narration {
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 2.2;
+  color: rgba(240,234,222,0.88);
+  margin: 20px auto;
+  max-width: 88%;
+  letter-spacing: 0.06em;
+  animation: fadeSlide 0.55s ease both;
+  font-family: var(--font-title);
+}
+.narration.keyword {
+  color: var(--gold-lt);
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  padding: 18px 20px;
+  text-align: center;
+  margin: 20px auto;
+  max-width: 88%;
+  line-height: 2.0;
+  border-top: 1px solid var(--gold-dim);
+  border-bottom: 1px solid var(--gold-dim);
+}
+
+/* ── 吹き出し共通 ── */
+.bubble-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin: 10px 0;
+  animation: fadeSlide 0.5s ease both;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1.5px solid var(--gold-dim);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--purple);
+  font-size: 22px;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.bubble {
+  max-width: 78%;
+  padding: 13px 16px;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  position: relative;
+}
+
+/* 左（ミーア・動物） */
+.bubble-left .bubble {
+  background: linear-gradient(135deg, rgba(74,45,122,0.75), rgba(45,27,78,0.9));
+  border: 1px solid var(--gold-dim);
+  border-bottom-left-radius: 4px;
+  color: var(--cream);
+}
+.bubble-left { flex-direction: row; }
+.bubble-left .bubble::before {
+  content: '';
+  position: absolute; left: -7px; bottom: 10px;
+  border: 7px solid transparent;
+  border-right-color: rgba(74,45,122,0.85);
+  border-left: 0;
+}
+
+/* 右（name） */
+.bubble-right { flex-direction: row-reverse; }
+.bubble-right .bubble {
+  background: rgba(240,234,222,0.1);
+  border: 1px solid rgba(240,234,222,0.2);
+  border-bottom-right-radius: 4px;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+.bubble-right .bubble::before {
+  content: '';
+  position: absolute; right: -7px; bottom: 10px;
+  border: 7px solid transparent;
+  border-left-color: rgba(240,234,222,0.12);
+  border-right: 0;
+}
+
+.speaker-name {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  opacity: 0.75;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* 動物の小さい吹き出し */
+.bubble-animal .bubble {
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(45,27,78,0.6), rgba(20,12,38,0.8));
+}
+.bubble-animal .avatar { width: 36px; height: 36px; font-size: 18px; }
+
+/* ── 選択肢 ── */
+#choices-area {
+  padding: 10px 18px 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.choice-btn {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.choice-btn:hover, .choice-btn:active {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  color: var(--gold-lt);
+  transform: translateX(4px);
+}
+.choice-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  opacity: 0.65;
+  margin-right: 6px;
+}
+
+/* ── ナビバー ── */
+#nav-bar {
+  position: sticky; bottom: 0;
+  background: linear-gradient(to top, rgba(12,9,22,0.98) 60%, transparent);
+  padding: 12px 18px 20px;
+  display: flex; gap: 10px; align-items: center;
+}
+.btn-back {
+  background: transparent;
+  border: 1px solid rgba(240,234,222,0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--cream-dim);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-back:hover { border-color: var(--gold-dim); color: var(--gold-lt); }
+.btn-back:disabled { opacity: 0.3; cursor: default; }
+
+.btn-next {
+  flex: 1;
+  background: linear-gradient(135deg, #c9a84c, #e8d5a3);
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  color: #1a1520;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.25s;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+}
+.btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(201,168,76,0.48); }
+.btn-next:active { transform: translateY(0); }
+
+/* ── 名前入力 ── */
+#name-screen {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 28px;
+  text-align: center;
+}
+.title-ornament { color: var(--gold); font-size: 14px; letter-spacing: 10px; opacity: 0.5; margin-bottom: 24px; }
+.title-lantern { font-size: 52px; margin-bottom: 16px; animation: glow 3s ease-in-out infinite alternate; }
+@keyframes glow {
+  from { filter: drop-shadow(0 0 8px rgba(201,168,76,0.4)); }
+  to   { filter: drop-shadow(0 0 24px rgba(201,168,76,0.9)); }
+}
+.app-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  color: var(--gold-lt);
+  margin-bottom: 8px;
+  text-shadow: 0 0 30px rgba(201,168,76,0.3);
+}
+.app-subtitle {
+  font-size: 0.8rem; letter-spacing: 0.25em;
+  color: rgba(232,208,163,0.5); margin-bottom: 32px;
+}
+.intro-text {
+  font-size: 0.9rem; line-height: 2.0;
+  color: var(--cream-dim); margin-bottom: 36px;
+  max-width: 380px;
+}
+.name-input-wrap { width: 100%; max-width: 320px; margin-bottom: 24px; }
+.name-input-label {
+  display: block; font-size: 0.78rem; letter-spacing: 0.1em;
+  color: var(--gold); opacity: 0.75; margin-bottom: 10px;
+}
+.name-input {
+  width: 100%;
+  background: rgba(45,27,78,0.5);
+  border: 1px solid var(--gold-dim);
+  border-radius: 10px;
+  padding: 14px 18px;
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.name-input:focus { border-color: var(--gold); }
+.name-input::placeholder { color: rgba(240,234,222,0.3); }
+.btn-start {
+  background: linear-gradient(135deg, #c9a84c, #e8d5a3);
+  border: none; border-radius: 12px;
+  padding: 16px 40px;
+  color: #1a1520;
+  font-family: var(--font-body);
+  font-size: 1rem; font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(201,168,76,0.35);
+  transition: all 0.25s; letter-spacing: 0.05em;
+}
+.btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,0.5); }
+
+/* ── CTA画面 ── */
+#cta-screen {
+  flex: 1; padding: 32px 24px 40px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.cta-image-wrap { width: 100%; margin-bottom: 24px; border-radius: 8px; overflow: hidden; }
+.cta-title {
+  font-family: var(--font-title);
+  font-size: 1.4rem; color: var(--gold-lt);
+  text-align: center; margin-bottom: 8px;
+}
+.cta-subtitle { font-size: 0.8rem; color: var(--gold); opacity: 0.7; letter-spacing: 0.15em; margin-bottom: 28px; text-align: center; }
+.cta-body {
+  font-size: 0.9rem; line-height: 2.1;
+  color: var(--cream-dim); margin-bottom: 32px; width: 100%;
+}
+.cta-body em { font-style: normal; color: var(--gold-lt); }
+.cta-divider {
+  width: 50px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 24px auto; opacity: 0.45;
+}
+.btn-cta-main {
+  display: block; width: 100%;
+  background: linear-gradient(135deg, #c9a84c, #e8d5a3);
+  border: none; border-radius: 12px;
+  padding: 18px 20px;
+  color: #1a1520;
+  font-family: var(--font-body);
+  font-size: 1rem; font-weight: 600;
+  text-align: center; text-decoration: none;
+  cursor: pointer; margin-bottom: 12px;
+  box-shadow: 0 4px 24px rgba(201,168,76,0.3);
+  transition: all 0.25s; letter-spacing: 0.03em;
+}
+.btn-cta-main:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,0.48); }
+.btn-cta-sub {
+  display: block; width: 100%;
+  background: transparent;
+  border: 1px solid rgba(240,234,222,0.25);
+  border-radius: 12px;
+  padding: 15px 20px;
+  color: var(--cream-dim);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  text-align: center; text-decoration: none;
+  cursor: pointer; margin-bottom: 24px;
+  transition: all 0.25s;
+}
+.btn-cta-sub:hover { border-color: var(--gold-dim); color: var(--gold-lt); }
+.btn-top {
+  background: none; border: none;
+  color: rgba(240,234,222,0.3);
+  font-family: var(--font-body); font-size: 0.78rem;
+  cursor: pointer; letter-spacing: 0.12em;
+  transition: color 0.2s;
+}
+.btn-top:hover { color: rgba(240,234,222,0.7); }
+
+/* ── 途中保存バッジ ── */
+#save-badge {
+  position: fixed; top: 12px; right: 12px; z-index: 10;
+  background: rgba(45,27,78,0.85);
+  border: 1px solid var(--gold-dim);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.72rem; color: var(--gold);
+  letter-spacing: 0.08em; opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+#save-badge.show { opacity: 1; }
+
+/* ── フェード ── */
+.fade-in { animation: fadeSlide 0.55s ease both; }
+
+@media (max-width: 400px) {
+  html { font-size: 16px; }
+  .app-title { font-size: 1.7rem; }
+}
+
+/* ── 章タイトル画面 ── */
+.chapter-screen {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 28px;
+  animation: fadeSlide 0.8s ease both;
+}
+.chapter-icon { font-size: 56px; margin-bottom: 20px; animation: glow 3s ease-in-out infinite alternate; }
+.chapter-num {
+  font-size: 0.75rem; letter-spacing: 0.3em;
+  color: var(--gold); opacity: 0.65; margin-bottom: 14px;
+}
+.chapter-title {
+  font-family: var(--font-title);
+  font-size: clamp(1.4rem, 5vw, 1.8rem);
+  color: var(--gold-lt);
+  line-height: 1.5; margin-bottom: 24px;
+}
+.chapter-line {
+  width: 50px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 20px; opacity: 0.5;
+}
+.chapter-auto-text {
+  font-size: 0.75rem; color: rgba(201,168,76,0.4);
+  letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div id="save-badge">保存済み ✦</div>
+
+<div id="app">
+  <!-- 名前入力画面 -->
+  <div id="name-screen" style="display:none;">
+    <div class="title-ornament">✦ ✦ ✦</div>
+    <div class="title-lantern">🏮</div>
+    <h1 class="app-title">大丈夫の奥へ</h1>
+    <p class="app-subtitle">— 本音を見つける静かな旅 —</p>
+    <p class="intro-text">
+      これは、「大丈夫」の奥にある<br>本音を見つける物語体験です。<br><br>
+      物語の中で、あなたの名前を<br>呼びながら進んでいきます。<br><br>
+      途中で選択肢が出てきたら、<br>今のあなたがいちばん近いと<br>感じるものを選んでください。<br><br>
+      所要時間は、だいたい5〜7分ほどです。
+    </p>
+    <div class="name-input-wrap">
+      <label class="name-input-label">呼ばれたい名前を入れてください</label>
+      <input type="text" id="name-input" class="name-input" placeholder="なまえ" maxlength="20">
+    </div>
+    <button class="btn-start" onclick="startStory()">物語をはじめる</button>
+  </div>
+
+  <!-- ストーリー画面（初期は非表示） -->
+  <div id="story-screen" style="display:none; flex-direction:column; flex:1;">
+    <div id="scene-img-area"></div>
+    <div id="story-area"></div>
+    <div id="choices-area"></div>
+    <div id="nav-bar">
+      <button class="btn-back" id="btn-back" onclick="goBack()">◁ 戻る</button>
+      <button class="btn-next" id="btn-next" onclick="goNext()">次へ</button>
+    </div>
+  </div>
+
+  <!-- CTA画面（初期は非表示） -->
+  <div id="cta-screen" style="display:none;"></div>
+</div>
+
+<script>
+// ==============================
+// CONFIG
+// ==============================
+const CONFIG = {
+  adventureUrl: 'https://example.com/14days',
+  lineUrl: 'https://lin.ee/XXXXXXX',
+  imgBase: './', // 画像フォルダのパス
+};
+let forestBgCount = 0; // 森背景の交互カウンター
+function forestBg(){ forestBgCount++; return forestBgCount%2===1?'02a_forest_path.png':'02b_forest_path.png'; }
+
+// ==============================
+// ステート
+// ==============================
+let userName = '';
+let history = []; // { stepIndex, bubbleIndex, answers }のスタック
+let stepIndex = 0;
+let bubbleIndex = 0;
+let answers = {};  // { q1:'A', q2:'B', ... }
+let inChoiceMode = false;
+
+// ==============================
+// 星を生成
+// ==============================
+(function(){
+  const sf = document.getElementById('stars');
+  for(let i=0;i<100;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random()>0.85?3:Math.random()>0.5?2:1.5;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;
+      width:${sz}px;height:${sz}px;
+      --d:${2+Math.random()*5}s;--delay:${Math.random()*6}s;`;
+    sf.appendChild(s);
+  }
+})();
+
+// ==============================
+// ストーリーデータ
+// ==============================
+// type: 'narration'|'narration-keyword'|'miia'|'name'|'animal'|'choice'
+// speaker: 'narration'|'miia'|'name'|'rabbit'|'sheep'|'bird'|'kitsune'
+// nextLabel: 次へボタン文言（省略時「次へ」）
+// image: 表示画像ファイル名（省略時なし）
+// choiceId: この選択肢のID（結果集計用）
+// choices: [{label,text,goto}]
+
+const STEPS = [
+  // ─── 第1章タイトル ───
+  {
+    type: 'chapter',
+    chapterNum: '第一章',
+    chapterTitle: '霧の森とうさぎのモヤ',
+    icon: '🌫️',
+  },
+  // ─────────────────────────────
+  // 場面2：霧の森
+  // ─────────────────────────────
+  {
+    image: '01_title_intro.png',
+    nextLabel: 'ランタンを灯す',
+    bubbles: [
+      { type:'narration', text:'あなたは今、霧のかかった森の入口に立っています。' },
+      { type:'narration', text:'手の中にあるのは、小さなランタンひとつだけ。' },
+      { type:'name',      text:'ここ……どこ？' },
+      { type:'narration', text:'地図はありません。\n道しるべも見えません。' },
+      { type:'narration', text:'けれど、なぜかこの先へ進まなければいけない気がしました。' },
+      { type:'name',      text:'進まなきゃ……いけない気がする。' },
+    ]
+  },
+  // 場面3：胸の中の声
+  {
+    image: 'forest',
+    nextLabel: '森の奥へ進む',
+    bubbles: [
+      { type:'narration', text:'ランタンの灯りが、ふわりと揺れました。' },
+      { type:'narration', text:'すると、胸の奥から小さな声が聞こえてきます。' },
+      { type:'name',      text:'不安……。\nなんかこわい……。\n私には無理かもしれない……。' },
+      { type:'narration', text:'その声は、ずっとあなたの中にあったものかもしれません。' },
+      { type:'name',      text:'でも、このまま抱え続けるのは、もう苦しい。' },
+    ]
+  },
+  // 場面4：黒いモヤ
+  {
+    nextLabel: '立ち止まる',
+    bubbles: [
+      { type:'narration', text:'少し進むと、霧の奥から黒いモヤが現れました。' },
+      { type:'narration', text:'モヤは、ゆらゆらと形を変えながら、あなたの前に立ちはだかります。' },
+      { type:'name',      text:'なに……これ……？' },
+      { type:'narration', text:'近づこうとすると、モヤはどんどん黒く、大きくなっていきました。' },
+      { type:'name',      text:'どうしよう。\nどうすればいいの……？' },
+    ]
+  },
+  // 場面5：ミーア登場
+  {
+    nextLabel: 'ミーアを見る',
+    bubbles: [
+      { type:'miia',     text:'ことばをかければいいのよ。' },
+      { type:'name',     text:'え……？\nだれ？' },
+      { type:'narration',text:'霧の奥から、小さな足音が近づいてきます。' },
+      { type:'narration',text:'そこに現れたのは、まるくて小さな、不思議な魔法使いでした。' },
+      { type:'miia',     text:'私はミーア。\n{{name}}の仲間よ。' },
+      { type:'name',     text:'仲間……？' },
+      { type:'miia',     text:'そう。\n心配しないで。' },
+      { type:'miia',     text:'このモヤは、力で倒すものじゃないの。' },
+      { type:'miia',     text:'必要なことばをかけて、\n中に閉じ込められている子を解放してあげるのよ。' },
+      { type:'name',     text:'中に……誰かいるの？' },
+      { type:'miia',     text:'いるわ。\nだから、助けにいきましょう。' },
+    ]
+  },
+  // 場面6：色を選ぶ（質問1）
+  {
+    nextLabel: '色を選ぶ',
+    bubbles: [
+      { type:'narration',text:'ミーアは、小さな色の光を3つ取り出しました。' },
+      { type:'miia',     text:'{{name}}。\nこの中から、今いちばん気になる色を選んで。' },
+      { type:'name',     text:'色……？' },
+      { type:'miia',     text:'今のあなたに必要なことばは、\nその色が教えてくれるわ。' },
+      { type:'miia',     text:'考えすぎなくていい。\n直感で選んで。' },
+    ],
+    choiceId: 'q1',
+    choices: [
+      { label:'A', text:'月しずくラベンダー', goto:'scene_7a' },
+      { label:'B', text:'朝つゆミント',       goto:'scene_7b' },
+      { label:'C', text:'木もれびゴールド',   goto:'scene_7c' },
+    ]
+  },
+  // 場面7A
+  {
+    id: 'scene_7a',
+    nextStep: 'scene_8',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、月しずくラベンダー。' },
+      { type:'miia',            text:'感じすぎた心を、やさしく包む色よ。' },
+      { type:'miia',            text:'今のあなたに必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、感じすぎる自分を責めなくていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面7B
+  {
+    id: 'scene_7b',
+    nextStep: 'scene_8',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、朝つゆミント。' },
+      { type:'miia',            text:'何度でも始め直していいと、思い出させてくれる色よ。' },
+      { type:'miia',            text:'今のあなたに必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、小さく始め直していい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面7C
+  {
+    id: 'scene_7c',
+    nextStep: 'scene_8',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、木もれびゴールド。' },
+      { type:'miia',            text:'あなたの中にある力を、もう一度照らしてくれる色よ。' },
+      { type:'miia',            text:'今のあなたに必要なことばは――' },
+      { type:'narration-keyword',text:'「私には、まだ使っていない力がある」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面8：モヤがほどける
+  {
+    id: 'scene_8',
+    nextLabel: 'うさぎに近づく',
+    bubbles: [
+      { type:'narration',text:'あなたがことばを唱えると、ランタンの灯りがふわりと強くなりました。' },
+      { type:'narration',text:'黒いモヤが、少しずつ薄くなっていきます。' },
+      { type:'name',     text:'あ……。\nモヤが、薄くなっていく……。' },
+      { type:'narration',text:'やがて、モヤの中から小さな白いうさぎが現れました。' },
+      { type:'name',     text:'うさぎ……？' },
+      { type:'narration',text:'うさぎは、体を小さく丸めて震えています。' },
+    ]
+  },
+  // 場面9：うさぎを助ける
+  {
+    nextLabel: 'うさぎを迎える',
+    bubbles: [
+      { type:'name',     text:'大丈夫？\n怖かったね。' },
+      { type:'name',     text:'もう、大丈夫だよ。' },
+      { type:'narration',text:'うさぎは、ゆっくりと顔を上げました。' },
+      { type:'animal',   speaker:'rabbit', text:'怖かった……。' },
+      { type:'animal',   speaker:'rabbit', text:'助けてくれて、ありがとう。' },
+      { type:'narration',text:'うさぎは、あなたの足元にそっと寄り添いました。' },
+    ]
+  },
+  // 場面10：仲間になる
+  {
+    nextLabel: '進む',
+    bubbles: [
+      { type:'miia',     text:'よかった。\nひとり、解放できたわね。' },
+      { type:'name',     text:'解放……。' },
+      { type:'miia',     text:'そう。\nモヤは、ただの敵じゃないの。' },
+      { type:'miia',     text:'押し込められた気持ちが、\nことばを待っている姿でもあるのよ。' },
+      { type:'name',     text:'じゃあ、あの子は……。' },
+      { type:'miia',     text:'今はまだ、全部わからなくていいわ。' },
+      { type:'miia',     text:'でも、{{name}}がかけたことばで、\nあの子はモヤの中から出てこられた。' },
+      { type:'narration',text:'うさぎが、そっとあなたを見上げます。' },
+      { type:'animal',   speaker:'rabbit', text:'一緒に行ってもいい？' },
+      { type:'name',     text:'うん。\n一緒に行こう。' },
+    ]
+  },
+  // 場面11：次の気配（第1章末）
+  {
+    image: '09_end_1_miia_usagi.png',
+    nextLabel: '次のモヤへ進む',
+    bubbles: [
+      { type:'narration',text:'あなたとミーア、そしてうさぎは、霧の森の奥へ進みます。' },
+      { type:'narration',text:'さっきよりも、ランタンの灯りが少しだけあたたかく感じました。' },
+      { type:'name',     text:'まだ、先があるんだよね。' },
+      { type:'miia',     text:'ええ。\nこの森には、まだ助けを待っている子がいるわ。' },
+      { type:'name',     text:'私、大丈夫かな。' },
+      { type:'miia',     text:'大丈夫。\nひとりで進む旅じゃないから。' },
+      { type:'miia',     text:'私も、うさぎも、ここにいるわ。' },
+      { type:'animal',   speaker:'rabbit', text:'うん。\n一緒に行こう、{{name}}。' },
+      { type:'narration',text:'そのとき、森の奥でまた黒いモヤが揺れました。' },
+    ]
+  },
+  // ─── 第2章 ───────────────────────
+  // 第2章タイトル
+  {
+    type: 'chapter',
+    chapterNum: '第二章',
+    chapterTitle: 'ひつじのモヤ',
+    icon: '🌧️',
+  },
+  // 場面12
+  {
+    nextLabel: 'モヤを見る',
+    bubbles: [
+      { type:'narration',text:'あなたとミーア、そしてうさぎは、霧の森の奥へ進みます。' },
+      { type:'narration',text:'足元の道は、さっきより少しぬかるんでいました。' },
+      { type:'name',     text:'なんだか、足が重い……。' },
+      { type:'animal',   speaker:'rabbit', text:'無理しないでね。' },
+      { type:'narration',text:'そのとき、前方にまた黒いモヤが現れました。' },
+    ]
+  },
+  // 場面13
+  {
+    nextLabel: '近づく',
+    bubbles: [
+      { type:'narration',text:'そのモヤは、さっきのモヤよりもゆっくり動いていました。' },
+      { type:'narration',text:'まるで、重たい荷物を背負っているみたいです。' },
+      { type:'name',     text:'また、モヤ……。' },
+      { type:'miia',     text:'うん。\nでも、さっきと同じよ。' },
+      { type:'miia',     text:'中に閉じ込められている子がいる。' },
+      { type:'name',     text:'今度は、どんな子なんだろう……。' },
+    ]
+  },
+  // 場面14
+  {
+    nextLabel: '耳をすます',
+    bubbles: [
+      { type:'narration',text:'あなたが一歩近づくと、モヤの中から小さな声が聞こえました。' },
+      { type:'narration',text:'「休んじゃだめ……。\nまだ、ちゃんとやらなきゃ……。\n私が止まったら、みんな困るから……。」' },
+      { type:'name',     text:'……。\nこの声、なんか……知ってる気がする。' },
+      { type:'miia',     text:'{{name}}の中にも、似た声があるのかもしれないね。' },
+    ]
+  },
+  // 場面15
+  {
+    nextLabel: '色を選ぶ',
+    bubbles: [
+      { type:'narration',text:'モヤは、さらに重く黒くなっていきます。' },
+      { type:'name',     text:'どうしよう。\nまた、ことばをかければいいの？' },
+      { type:'miia',     text:'そう。\nでも今度は、さっきとは少し違うことばが必要よ。' },
+      { type:'name',     text:'違うことば？' },
+      { type:'miia',     text:'この子は、ずっと頑張り続けてきた子。\nだから、休むことを許すことばが必要なの。' },
+    ]
+  },
+  // 場面16：色を選ぶ（質問2）
+  {
+    nextLabel: '色を選ぶ',
+    bubbles: [
+      { type:'narration',text:'ミーアは、また小さな色の光を3つ取り出しました。' },
+      { type:'miia',     text:'{{name}}。\n今、このモヤに必要だと感じる色を選んで。' },
+      { type:'miia',     text:'考えすぎなくていい。\n今、目が止まった色でいいの。' },
+    ],
+    choiceId: 'q2',
+    choices: [
+      { label:'A', text:'祈りのパール',    goto:'scene_17a' },
+      { label:'B', text:'静寂アクア',      goto:'scene_17b' },
+      { label:'C', text:'夕焼けコーラル',  goto:'scene_17c' },
+    ]
+  },
+  // 場面17A
+  {
+    id: 'scene_17a',
+    nextStep: 'scene_18',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、祈りのパール。' },
+      { type:'miia',            text:'安心と浄化を届ける、やさしい光の色よ。' },
+      { type:'miia',            text:'今、この子に必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、休んでも愛されていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面17B
+  {
+    id: 'scene_17b',
+    nextStep: 'scene_18',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、静寂アクア。' },
+      { type:'miia',            text:'深呼吸と静けさを思い出させてくれる色よ。' },
+      { type:'miia',            text:'今、この子に必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、止まっても置いていかれない」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面17C
+  {
+    id: 'scene_17c',
+    nextStep: 'scene_18',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、夕焼けコーラル。' },
+      { type:'miia',            text:'あたたかさとつながりを思い出させてくれる色よ。' },
+      { type:'miia',            text:'今、この子に必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、ひとりで全部抱えなくていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面18
+  {
+    id: 'scene_18',
+    nextLabel: 'ひつじに近づく',
+    bubbles: [
+      { type:'narration',text:'あなたがことばを唱えると、ランタンの灯りがやさしく広がりました。' },
+      { type:'narration',text:'黒いモヤが、ふわり、ふわりと薄くなっていきます。' },
+      { type:'name',     text:'あ……。\nまた、見えてきた……。' },
+      { type:'narration',text:'モヤの中から現れたのは、白くて小さなひつじでした。' },
+      { type:'narration',text:'ひつじは、眠そうな目をして、地面に座りこんでいます。' },
+    ]
+  },
+  // 場面19
+  {
+    nextLabel: 'ひつじを迎える',
+    bubbles: [
+      { type:'name',     text:'大丈夫？\nずっと、疲れてたの？' },
+      { type:'narration',text:'ひつじは、ゆっくりとうなずきました。' },
+      { type:'animal',   speaker:'sheep', text:'休みたかった……。' },
+      { type:'animal',   speaker:'sheep', text:'でも、休んじゃだめだと思ってた。' },
+      { type:'name',     text:'そっか……。\nずっと、がんばってたんだね。' },
+      { type:'narration',text:'ひつじは、小さく息を吐いて、あなたのそばに寄り添いました。' },
+    ]
+  },
+  // 場面20
+  {
+    nextLabel: '進む',
+    bubbles: [
+      { type:'miia',     text:'この子は、ずっと休むことを怖がっていたのね。' },
+      { type:'name',     text:'休むことを、怖がる……。' },
+      { type:'miia',     text:'止まったら迷惑をかける。\nちゃんとしなきゃいけない。\nそう思い続けると、心は休み方を忘れてしまうの。' },
+      { type:'name',     text:'私も……そうかもしれない。' },
+      { type:'miia',     text:'気づけたなら、それで十分よ。' },
+      { type:'miia',     text:'気づくことは、解放のはじまりだから。' },
+    ]
+  },
+  // 場面21（第2章末）
+  {
+    image: '10_end_2_miia_usagi_hitsuji.png',
+    nextLabel: '羽音の方へ進む',
+    bubbles: [
+      { type:'narration',text:'うさぎとひつじが、あなたのそばに並びました。' },
+      { type:'animal',   speaker:'rabbit', text:'ひとりじゃないね。' },
+      { type:'animal',   speaker:'sheep',  text:'少し、眠くなってきた……。' },
+      { type:'name',     text:'ふふ。\n休んでいいよ。' },
+      { type:'narration',text:'ひつじは、あなたの足元で安心したように目を閉じました。' },
+      { type:'miia',     text:'{{name}}。\nこの森は、進むだけの場所じゃないの。' },
+      { type:'miia',     text:'助けながら、気づきながら、\n少しずつ自分を取り戻す場所よ。' },
+      { type:'narration',text:'その言葉のあと、森の奥で小さな羽音が聞こえました。' },
+    ]
+  },
+  // ─── 第3章 ───────────────────────
+  // 第3章タイトル
+  {
+    type: 'chapter',
+    chapterNum: '第三章',
+    chapterTitle: '小鳥のモヤ',
+    icon: '🐦',
+  },
+  // 場面22
+  {
+    nextLabel: '羽音をたどる',
+    bubbles: [
+      { type:'narration',text:'森の奥から、かすかな羽音が聞こえてきました。' },
+      { type:'narration',text:'ぱた、ぱた。\nでも、その音はどこか弱々しく聞こえます。' },
+      { type:'name',     text:'今の音……鳥？' },
+      { type:'animal',   speaker:'rabbit', text:'小さな音だったね。' },
+      { type:'animal',   speaker:'sheep',  text:'なんだか、苦しそう……。' },
+      { type:'miia',     text:'行ってみましょう。\nきっと、助けを待っているわ。' },
+    ]
+  },
+  // 場面23
+  {
+    nextLabel: 'そっと近づく',
+    bubbles: [
+      { type:'narration',text:'少し進むと、枝の間に黒いモヤが引っかかっていました。' },
+      { type:'narration',text:'そのモヤは、何かを言いたそうに震えています。' },
+      { type:'name',     text:'またモヤ……。' },
+      { type:'narration',text:'けれど、今度のモヤは叫びません。' },
+      { type:'narration',text:'ただ、声にならない何かを抱えたまま、\n小さく揺れていました。' },
+      { type:'name',     text:'何か……言いたいのかな。' },
+    ]
+  },
+  // 場面24
+  {
+    nextLabel: 'モヤを見る',
+    bubbles: [
+      { type:'narration',text:'あなたが近づくと、モヤの中からかすかな声が聞こえました。' },
+      { type:'narration',text:'「言わない方がいい……。\n私が黙っていれば、きっと大丈夫……。\n本当は違うって、言いたかった……。」' },
+      { type:'name',     text:'……。\nこの声、胸がぎゅっとする。' },
+      { type:'miia',     text:'飲み込んだ言葉は、消えたわけじゃないの。' },
+      { type:'miia',     text:'行き場をなくして、\n心の奥でずっと待っていることがあるわ。' },
+    ]
+  },
+  // 場面25
+  {
+    nextLabel: '色を選ぶ',
+    bubbles: [
+      { type:'narration',text:'モヤは、枝にからまったまま動けずにいます。' },
+      { type:'name',     text:'この子には、どんなことばをかけたらいいの？' },
+      { type:'miia',     text:'この子に必要なのは、\n責めることばじゃない。' },
+      { type:'miia',     text:'「言ってもよかったんだよ」って、\nやさしく許してあげることば。' },
+      { type:'name',     text:'言っても……よかった……。' },
+      { type:'miia',     text:'そう。\n声を取り戻すための色を選びましょう。' },
+    ]
+  },
+  // 場面26：色を選ぶ（質問3）
+  {
+    nextLabel: '色を選ぶ',
+    bubbles: [
+      { type:'narration',text:'ミーアは、今度は3つの色の羽を取り出しました。' },
+      { type:'miia',     text:'{{name}}。\nこの子に届けたい色を選んで。' },
+      { type:'miia',     text:'正しさではなく、\n今、心がふっと反応する色でいいわ。' },
+    ],
+    choiceId: 'q3',
+    choices: [
+      { label:'A', text:'風のターコイズ',    goto:'scene_27a' },
+      { label:'B', text:'星あかりブルー',    goto:'scene_27b' },
+      { label:'C', text:'花ひらくローズ',    goto:'scene_27c' },
+    ]
+  },
+  // 場面27A
+  {
+    id: 'scene_27a',
+    nextStep: 'scene_28',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、風のターコイズ。' },
+      { type:'miia',            text:'閉じ込めた言葉に、風を通してくれる色よ。' },
+      { type:'miia',            text:'今、この子に必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、私の気持ちを言葉にしていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面27B
+  {
+    id: 'scene_27b',
+    nextStep: 'scene_28',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、星あかりブルー。' },
+      { type:'miia',            text:'言葉になる前の小さな本音を、\nそっと照らしてくれる色よ。' },
+      { type:'miia',            text:'今、この子に必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、まだ言葉にならない気持ちも大切にしていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面27C
+  {
+    id: 'scene_27c',
+    nextStep: 'scene_28',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、花ひらくローズ。' },
+      { type:'miia',            text:'自分の気持ちをやさしく抱きしめる色よ。' },
+      { type:'miia',            text:'今、この子に必要なことばは――' },
+      { type:'narration-keyword',text:'「私は、わかってほしかった自分を責めなくていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面28
+  {
+    id: 'scene_28',
+    nextLabel: '小鳥に近づく',
+    bubbles: [
+      { type:'narration',text:'あなたがことばを唱えると、\nランタンの光が枝の間へすっと届きました。' },
+      { type:'narration',text:'黒いモヤが、ほどけるように薄くなっていきます。' },
+      { type:'name',     text:'あ……。\n何か、見えてきた。' },
+      { type:'narration',text:'モヤの中にいたのは、小さな小鳥でした。' },
+      { type:'narration',text:'羽は少し震えていて、くちばしは固く閉じられています。' },
+    ]
+  },
+  // 場面29
+  {
+    nextLabel: '小鳥を迎える',
+    bubbles: [
+      { type:'name',     text:'大丈夫。\n急いで話さなくていいよ。' },
+      { type:'name',     text:'でも、ここにいるから。\n聞くよ。' },
+      { type:'narration',text:'小鳥は、ゆっくりと顔を上げました。' },
+      { type:'animal',   speaker:'bird', text:'本当は……。' },
+      { type:'narration',text:'小鳥の声は、とても小さなものでした。' },
+      { type:'animal',   speaker:'bird', text:'本当は、言いたかった。' },
+      { type:'name',     text:'うん。\n言いたかったんだね。' },
+      { type:'narration',text:'小鳥は、小さく羽を震わせました。' },
+      { type:'animal',   speaker:'bird', text:'聞いてくれて、ありがとう。' },
+    ]
+  },
+  // 場面30
+  {
+    nextLabel: '進む',
+    bubbles: [
+      { type:'miia',     text:'この子は、言葉を失っていたわけじゃないの。' },
+      { type:'name',     text:'じゃあ……？' },
+      { type:'miia',     text:'言っても無駄かもしれない。\nわかってもらえないかもしれない。\nそう思って、声をしまっていたの。' },
+      { type:'name',     text:'……私も、ある。' },
+      { type:'miia',     text:'言えなかったことがある人ほど、\n本当はたくさん感じているのよ。' },
+      { type:'miia',     text:'だから、いきなり誰かに全部言わなくてもいい。' },
+      { type:'miia',     text:'まずは自分だけに、\n「本当はこう思っていた」って\n聞かせてあげればいいの。' },
+    ]
+  },
+  // 場面31（第3章末）
+  {
+    image: '11_end_3_miia_usagi_hitsuji_kotori.png',
+    nextLabel: '扉へ向かう',
+    bubbles: [
+      { type:'narration',text:'うさぎ、ひつじ、小鳥が、あなたのそばに並びました。' },
+      { type:'narration',text:'森の霧はまだ残っています。' },
+      { type:'narration',text:'でも、最初より少しだけ、空気がやわらかくなった気がしました。' },
+      { type:'animal',   speaker:'rabbit', text:'こわかった気持ち。' },
+      { type:'animal',   speaker:'sheep',  text:'休みたかった気持ち。' },
+      { type:'animal',   speaker:'bird',   text:'言いたかった気持ち。' },
+      { type:'narration',text:'それぞれの声が、あなたのランタンに小さな光を足していきます。' },
+      { type:'name',     text:'この子たち……なんだか、ずっと知っていた気がする。' },
+      { type:'miia',     text:'もうすぐ、わかるわ。' },
+      { type:'narration',text:'そのとき、森の奥に小さな扉が見えました。' },
+    ]
+  },
+  // ─── 第4章 ───────────────────────
+  // 第4章タイトル
+  {
+    type: 'chapter',
+    chapterNum: '第四章',
+    chapterTitle: '扉の前のキツネ',
+    icon: '🦊',
+  },
+  // 場面32
+  {
+    nextLabel: 'モヤに近づく',
+    bubbles: [
+      { type:'narration',text:'森の奥に、小さな扉が見えました。' },
+      { type:'narration',text:'けれど、その扉の前に、\n今までよりも濃い黒いモヤが立っています。' },
+      { type:'name',     text:'あの扉……。\nでも、まだモヤがいる。' },
+      { type:'animal',   speaker:'rabbit', text:'なんだか、こわい……。' },
+      { type:'animal',   speaker:'sheep',  text:'重たい感じがするね……。' },
+      { type:'animal',   speaker:'bird',   text:'声が、聞こえないのに苦しい。' },
+      { type:'miia',     text:'あの子は、少し手強いわ。' },
+      { type:'name',     text:'手強い……？' },
+      { type:'miia',     text:'変わりたい気持ちの前に立つモヤだから。' },
+    ]
+  },
+  // 場面33
+  {
+    nextLabel: '色を選ぶ',
+    bubbles: [
+      { type:'narration',text:'あなたが近づくと、モヤの奥から声が聞こえました。' },
+      { type:'narration',text:'「変わりたい。\nでも、怖い。\n失敗したらどうするの。\n今さら変わったって、何も変わらないかもしれない。」' },
+      { type:'name',     text:'……。\nこの声、すごく苦しい。' },
+      { type:'miia',     text:'変わりたい気持ちがあるからこそ、\n怖さも大きくなるの。' },
+      { type:'name',     text:'じゃあ、どうしたらいいの？' },
+      { type:'miia',     text:'この子には、\n「小さな一歩でいい」と伝えることばが必要よ。' },
+    ]
+  },
+  // 場面34：色を選ぶ（質問4）
+  {
+    nextLabel: '色を選ぶ',
+    bubbles: [
+      { type:'narration',text:'ミーアは、3つの光を取り出しました。' },
+      { type:'miia',     text:'{{name}}。\nこの子に届けたい色を選んで。' },
+      { type:'miia',     text:'怖さを消す色じゃなくて、\n怖さを抱えたまま進める色を。' },
+    ],
+    choiceId: 'q4',
+    choices: [
+      { label:'A', text:'夜明けルビー',    goto:'scene_35a' },
+      { label:'B', text:'オーロラクリア',  goto:'scene_35b' },
+      { label:'C', text:'若葉グリーン',    goto:'scene_35c' },
+    ]
+  },
+  // 場面35A
+  {
+    id: 'scene_35a',
+    nextStep: 'scene_36',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、夜明けルビー。' },
+      { type:'miia',            text:'新しい一歩を踏み出す覚悟を、\nそっと灯してくれる色よ。' },
+      { type:'narration-keyword',text:'「私は、怖くても新しい一歩を選んでいい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面35B
+  {
+    id: 'scene_35b',
+    nextStep: 'scene_36',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、オーロラクリア。' },
+      { type:'miia',            text:'変わることを、奇跡ではなく\n小さな変化として受け取る色よ。' },
+      { type:'narration-keyword',text:'「私は、変わりはじめている自分を信じていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面35C
+  {
+    id: 'scene_35c',
+    nextStep: 'scene_36',
+    nextLabel: 'ことばを唱える',
+    bubbles: [
+      { type:'miia',            text:'{{name}}が選んだのは、若葉グリーン。' },
+      { type:'miia',            text:'まだ小さな芽を、\n大切に育てていく色よ。' },
+      { type:'narration-keyword',text:'「私は、小さな一歩から変わっていい」' },
+      { type:'miia',            text:'このことばを、心の中で大きく唱えて。' },
+    ]
+  },
+  // 場面36：消えないモヤ
+  {
+    id: 'scene_36',
+    nextLabel: '立ち止まる',
+    bubbles: [
+      { type:'narration',text:'あなたがことばを唱えると、ランタンの光が強くなりました。' },
+      { type:'narration',text:'けれど、モヤは消えません。' },
+      { type:'name',     text:'え……？' },
+      { type:'narration',text:'黒いモヤは、少し薄くなっただけで、\nまたすぐに濃くなっていきます。' },
+      { type:'name',     text:'なんで……。\nことばを唱えたのに。' },
+      { type:'narration',text:'「そんな一言で変われるわけない。\nまたすぐ戻るよ。\nどうせ続かないよ。」' },
+      { type:'name',     text:'……やっぱり、無理なのかな。' },
+    ]
+  },
+  // 場面37：ミーアの助け
+  {
+    nextLabel: 'もう一度、ことばを灯す',
+    bubbles: [
+      { type:'miia',     text:'{{name}}、大丈夫。' },
+      { type:'name',     text:'でも、消えないよ。\n今までみたいに、ほどけない。' },
+      { type:'miia',     text:'変わることに関わるモヤは、\n一度のことばだけではほどけないことがあるの。' },
+      { type:'name',     text:'じゃあ、どうしたら……。' },
+      { type:'miia',     text:'何度も、必要なことばをかけてあげるの。' },
+      { type:'miia',     text:'今日だけじゃなくて、\n明日も、その次の日も。' },
+      { type:'miia',     text:'小さなことばを、少しずつ重ねていくの。' },
+      { type:'name',     text:'重ねていく……。' },
+      { type:'miia',     text:'変わるって、いきなり別人になることじゃないわ。' },
+      { type:'miia',     text:'昨日より少しだけ、\n自分にやさしい言葉を選べるようになること。' },
+      { type:'miia',     text:'その小さな積み重ねが、\nモヤをほどく力になるのよ。' },
+    ]
+  },
+  // 場面38：みんなの光
+  {
+    nextLabel: 'もう一度唱える',
+    bubbles: [
+      { type:'narration',text:'うさぎが、あなたのそばに来ました。' },
+      { type:'animal',   speaker:'rabbit', text:'こわくても、ここにいるよ。' },
+      { type:'narration',text:'ひつじが、ゆっくり顔を上げます。' },
+      { type:'animal',   speaker:'sheep',  text:'休みながらでも、進めるよ。' },
+      { type:'narration',text:'小鳥が、小さく羽を広げました。' },
+      { type:'animal',   speaker:'bird',   text:'言葉にできるまで、待ってるよ。' },
+      { type:'narration',text:'三匹の光が、あなたのランタンに集まっていきます。' },
+      { type:'miia',     text:'{{name}}。\nひとりで一気に変わろうとしなくていい。' },
+      { type:'miia',     text:'今は、みんなの光を借りて、\nもう一度だけ届けてみましょう。' },
+    ]
+  },
+  // 場面39：キツネの解放
+  {
+    image: '07_kitsune_icon.png',
+    nextLabel: 'キツネを迎える',
+    bubbles: [
+      { type:'narration',text:'あなたがもう一度ことばを唱えると、\nランタンの光が静かに広がりました。' },
+      { type:'narration',text:'今度は、モヤがゆっくりとほどけていきます。' },
+      { type:'name',     text:'あ……。\n見えてきた。' },
+      { type:'narration',text:'モヤの中にいたのは、小さなキツネでした。' },
+      { type:'narration',text:'キツネは扉の前で、ずっと足を止めていたようです。' },
+      { type:'animal',   speaker:'kitsune', text:'進みたかった。' },
+      { type:'animal',   speaker:'kitsune', text:'でも、怖かった。' },
+      { type:'name',     text:'うん。\n怖かったんだね。' },
+      { type:'name',     text:'それでも、ここまで来てくれたんだね。' },
+      { type:'narration',text:'キツネは、静かにあなたの隣へ歩いてきました。' },
+    ]
+  },
+  // 場面40：扉の前へ（第4章末）
+  {
+    image: '12_end_4_miia_usagi_hitsuji_kotori_kitsune.png',
+    nextLabel: '扉に手をかける',
+    bubbles: [
+      { type:'narration',text:'うさぎ、ひつじ、小鳥、キツネ。\n四匹が、あなたのそばに並びました。' },
+      { type:'animal',   speaker:'rabbit',  text:'こわかった気持ち。' },
+      { type:'animal',   speaker:'sheep',   text:'休みたかった気持ち。' },
+      { type:'animal',   speaker:'bird',    text:'言いたかった気持ち。' },
+      { type:'animal',   speaker:'kitsune', text:'進みたかった気持ち。' },
+      { type:'narration',text:'それぞれの声が、ランタンの中でひとつの光になっていきます。' },
+      { type:'miia',     text:'{{name}}。\nこれで、扉の前まで来たわ。' },
+      { type:'name',     text:'うん。\n今度こそ、開けられるかな。' },
+    ]
+  },
+  // ─── CTA ─────────────────────────
+  // 場面41：14日間への扉
+  {
+    isCta: true,
+    image: '08_final_door.png',
+    bubbles: [
+      { type:'narration',text:'扉の向こうには、\nもうひとつ小さな扉がありました。' },
+      { type:'narration',text:'その扉には、こう書かれています。' },
+      { type:'narration-keyword',text:'「14日間の小さな冒険」' },
+      { type:'name',     text:'これは……？' },
+      { type:'miia',     text:'今日、{{name}}は\n自分の中にあった小さな声を見つけたわ。' },
+      { type:'miia',     text:'こわかった気持ち。\n休みたかった気持ち。\n言いたかった気持ち。\n進みたかった気持ち。' },
+      { type:'miia',     text:'でも、日常に戻ると、\nまた「大丈夫」って言いたくなる日もある。' },
+      { type:'name',     text:'うん……。\nそれ、わかる気がする。' },
+      { type:'miia',     text:'だから、この先には\n毎日ひとつずつ、\n必要なことばを受け取りながら進む\n14日間の小さな冒険があるの。' },
+      { type:'name',     text:'14日間の、小さな冒険……。' },
+      { type:'miia',     text:'こわくなった日も。\n立ち止まりたくなった日も。\nまた「大丈夫」って飲み込みそうになった日も。' },
+      { type:'miia',     text:'ひとりで抱えなくていい。\n私がそばで見守るから。\n一緒に進みましょう。' },
+      { type:'name',     text:'……うん。\nひとりじゃないなら、少しだけ進める気がする。' },
+      { type:'miia',     text:'大丈夫。\nもう、ひとりで頑張らなくていいのよ。' },
+      { type:'miia',     text:'こわくてもいい。\n迷ってもいい。\n途中で立ち止まる日があってもいい。' },
+      { type:'miia',     text:'それでも、{{name}}はちゃんと変わりはじめていける。' },
+      { type:'name',     text:'私も……変わりはじめていいのかな。' },
+      { type:'miia',     text:'もちろんよ。\nここまで来た{{name}}なら、\n次の扉を見てみる準備は、もうできているわ。' },
+      { type:'narration-keyword',text:'「14日間の小さな冒険」' },
+      { type:'miia',     text:'さあ、{{name}}。\n次の扉を、見てみましょう。' },
+    ]
+  },
+];
+
+// id→indexマップ
+const ID_MAP = {};
+STEPS.forEach((s,i)=>{ if(s.id) ID_MAP[s.id]=i; });
+
+// 分岐後の合流先を解決
+function resolveNextIndex(step, currentIndex){
+  if(step.nextStep && ID_MAP[step.nextStep] !== undefined){
+    return ID_MAP[step.nextStep];
+  }
+  return currentIndex + 1;
+}
+
+// キャラ情報
+const CHARS = {
+  miia:    { icon:'🐱', name:'ミーア',   img:'03_miia_icon.png' },
+  rabbit:  { icon:'🐰', name:'うさぎ',   img:'04_usagi_icon.png' },
+  sheep:   { icon:'🐑', name:'ひつじ',   img:'05_hitsuji_icon.png' },
+  bird:    { icon:'🐦', name:'小鳥',     img:'06_kotori_icon.png' },
+  kitsune: { icon:'🦊', name:'キツネ',   img:'07_kitsune_icon.png' },
+};
+
+// ==============================
+// localStorage 保存・復元
+// ==============================
+function saveState(){
+  try {
+    localStorage.setItem('honne_save', JSON.stringify({
+      userName, stepIndex, bubbleIndex, answers, history
+    }));
+    showSaveBadge();
+  } catch(e){}
+}
+function loadState(){
+  try {
+    const d = JSON.parse(localStorage.getItem('honne_save')||'null');
+    if(d && d.userName){
+      userName=d.userName; stepIndex=d.stepIndex;
+      bubbleIndex=d.bubbleIndex; answers=d.answers||{}; history=d.history||[];
+      return true;
+    }
+  } catch(e){}
+  return false;
+}
+function clearSave(){
+  try { localStorage.removeItem('honne_save'); } catch(e){}
+}
+
+let saveBadgeTimer;
+function showSaveBadge(){
+  const b = document.getElementById('save-badge');
+  b.classList.add('show');
+  clearTimeout(saveBadgeTimer);
+  saveBadgeTimer = setTimeout(()=>b.classList.remove('show'), 2000);
+}
+
+// ==============================
+// 名前置換
+// ==============================
+function n(text){ return text.replace(/\{\{name\}\}/g, userName); }
+
+// ==============================
+// 画像HTML生成
+// ==============================
+function imgHtml(filename, alt){
+  const resolved = filename === 'forest' ? forestBg() : filename;
+  const src = CONFIG.imgBase + resolved;
+  return `<img class="scene-image" src="${src}" alt="${alt||''}"
+    onerror="this.style.display='none'">`;
+}
+
+function avatarHtml(char){
+  const src = CONFIG.imgBase + char.img;
+  return `<div class="avatar">
+    <img src="${src}" alt="${char.name}" onerror="this.outerHTML='<span>${char.icon}</span>'">
+  </div>`;
+}
+
+// ==============================
+// レンダリング
+// ==============================
+function renderStep(){
+  const step = STEPS[stepIndex];
+
+  // ── chapter型：章タイトル画面を2秒後に自動進行 ──
+  if(step.type === 'chapter'){
+    const storyArea = document.getElementById('story-area');
+    const sceneImgArea = document.getElementById('scene-img-area');
+    const choicesArea = document.getElementById('choices-area');
+    const navBar = document.getElementById('nav-bar');
+    sceneImgArea.innerHTML = '';
+    choicesArea.innerHTML = '';
+    navBar.style.display = 'none';
+    storyArea.innerHTML = `
+      <div class="chapter-screen">
+        <div class="chapter-icon">${step.icon}</div>
+        <p class="chapter-num">${step.chapterNum}</p>
+        <h2 class="chapter-title">${step.chapterTitle}</h2>
+        <div class="chapter-line"></div>
+        <p class="chapter-auto-text">まもなく始まります…</p>
+      </div>`;
+    window.scrollTo({top:0, behavior:'smooth'});
+    setTimeout(()=>{
+      navBar.style.display = '';
+      stepIndex++;
+      bubbleIndex = 0;
+      saveState();
+      renderStep();
+    }, 2200);
+    return;
+  }
+
+  const storyArea = document.getElementById('story-area');
+  const sceneImgArea = document.getElementById('scene-img-area');
+  const choicesArea = document.getElementById('choices-area');
+  const btnNext = document.getElementById('btn-next');
+  const btnBack = document.getElementById('btn-back');
+  document.getElementById('nav-bar').style.display = '';
+
+  // 画像
+  sceneImgArea.innerHTML = step.image ? imgHtml(step.image) : '';
+
+  // ナビ初期状態：ボタン非表示でスタート
+  btnNext.style.display = 'none';
+  choicesArea.innerHTML = '';
+  storyArea.innerHTML = '';
+  btnBack.disabled = (history.length === 0);
+
+  // 吹き出しを時間差で自動表示
+  const bubbles = step.bubbles;
+  let shown = 0;
+
+  function showNextBubble(){
+    if(shown >= bubbles.length){
+      // 全部表示し終わったら選択肢 or 次へボタンを出す
+      if(step.choices){
+        inChoiceMode = true;
+        btnNext.style.display = 'none';
+        step.choices.forEach(c => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn fade-in';
+          btn.innerHTML = `<span class="choice-tag">${c.label}</span>${n(c.text)}`;
+          btn.onclick = () => selectChoice(c, step.choiceId);
+          choicesArea.appendChild(btn);
+        });
+      } else {
+        inChoiceMode = false;
+        btnNext.style.display = '';
+        if(step.isCta){
+          btnNext.textContent = '次の扉をみてみる';
+        } else if(step.nextLabel){
+          btnNext.textContent = step.nextLabel;
+        } else {
+          btnNext.textContent = '次へ';
+        }
+      }
+      // 保存
+      bubbleIndex = bubbles.length - 1;
+      saveState();
+      return;
+    }
+    const el = makeBubble(bubbles[shown]);
+    storyArea.appendChild(el);
+    shown++;
+    // 最後の要素へスクロール
+    setTimeout(()=>{
+      el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }, 80);
+    // 次の吹き出しまでの待ち時間（ナレーションは少し長め）
+    const b = bubbles[shown - 1];
+    const isCta = step.isCta || false;
+    const delay = isCta
+      ? (b.type === 'narration' || b.type === 'narration-keyword') ? 2200 : 1800
+      : (b.type === 'narration' || b.type === 'narration-keyword') ? 1100 : 900;
+    setTimeout(showNextBubble, delay);
+  }
+
+  window.scrollTo({top:0, behavior:'smooth'});
+  setTimeout(showNextBubble, 200);
+}
+
+function makeBubble(b){
+  const wrap = document.createElement('div');
+  wrap.className = 'fade-in';
+
+  if(b.type === 'narration'){
+    const div = document.createElement('div');
+    div.className = 'narration';
+    div.textContent = n(b.text);
+    wrap.appendChild(div);
+    return wrap;
+  }
+  if(b.type === 'narration-keyword'){
+    const div = document.createElement('div');
+    div.className = 'narration keyword';
+    div.textContent = n(b.text);
+    wrap.appendChild(div);
+    return wrap;
+  }
+  if(b.type === 'name'){
+    const row = document.createElement('div');
+    row.className = 'bubble-row bubble-right';
+    row.innerHTML = `
+      <div class="bubble">
+        <span class="speaker-name">${userName}</span>
+        ${n(b.text).replace(/\n/g,'<br>')}
+      </div>
+      <div class="avatar" style="background:rgba(240,234,222,0.1);border-color:rgba(240,234,222,0.2);">
+        <span>👤</span>
+      </div>`;
+    wrap.appendChild(row);
+    return wrap;
+  }
+  if(b.type === 'miia'){
+    const char = CHARS.miia;
+    const row = document.createElement('div');
+    row.className = 'bubble-row bubble-left';
+    row.innerHTML = `
+      ${avatarHtml(char)}
+      <div class="bubble">
+        <span class="speaker-name">${char.name}</span>
+        ${n(b.text).replace(/\n/g,'<br>')}
+      </div>`;
+    wrap.appendChild(row);
+    return wrap;
+  }
+  if(b.type === 'animal'){
+    const char = CHARS[b.speaker] || { icon:'🐾', name:'なかま', img:'' };
+    const row = document.createElement('div');
+    row.className = 'bubble-row bubble-left bubble-animal';
+    row.innerHTML = `
+      <div class="avatar" style="width:36px;height:36px;font-size:18px;background:rgba(45,27,78,0.6);">
+        ${char.img ? `<img src="${CONFIG.imgBase+char.img}" alt="${char.name}" onerror="this.outerHTML='<span>${char.icon}</span>'">` : `<span>${char.icon}</span>`}
+      </div>
+      <div class="bubble" style="font-size:0.85rem;padding:10px 14px;background:linear-gradient(135deg,rgba(45,27,78,0.6),rgba(20,12,38,0.8));">
+        <span class="speaker-name">${char.name}</span>
+        ${n(b.text).replace(/\n/g,'<br>')}
+      </div>`;
+    wrap.appendChild(row);
+    return wrap;
+  }
+  return wrap;
+}
+
+// ==============================
+// ナビゲーション
+// ==============================
+function goNext(){
+  const step = STEPS[stepIndex];
+  if(step.isCta){
+    showCta(); return;
+  }
+  history.push({ stepIndex, bubbleIndex: 0, answers: {...answers} });
+  stepIndex = resolveNextIndex(step, stepIndex);
+  bubbleIndex = 0;
+  saveState();
+  renderStep();
+}
+
+function selectChoice(choice, choiceId){
+  history.push({ stepIndex, bubbleIndex, answers: {...answers} });
+  if(choiceId) answers[choiceId] = choice.label;
+  const target = ID_MAP[choice.goto];
+  if(target !== undefined){
+    stepIndex = target;
+  } else {
+    stepIndex++;
+  }
+  bubbleIndex = 0;
+  saveState();
+  renderStep();
+}
+
+function goBack(){
+  if(history.length === 0) return;
+  const prev = history.pop();
+  stepIndex   = prev.stepIndex;
+  bubbleIndex = prev.bubbleIndex;
+  answers     = prev.answers;
+  saveState();
+  renderStep();
+}
+
+// ==============================
+// CTA画面
+// ==============================
+function showCta(){
+  document.getElementById('story-screen').style.display = 'none';
+  const cta = document.getElementById('cta-screen');
+  cta.style.display = 'flex';
+  cta.innerHTML = `
+    <div class="cta-image-wrap">${imgHtml('08_final_door.png','最後の扉')}</div>
+
+    <p class="cta-title">14日間の小さな冒険</p>
+    <p class="cta-subtitle">— ひとりで頑張らない、ことばの伴走プログラム —</p>
+
+    <div class="cta-body">
+      <p>今日、${userName}は自分の中にあった<br>小さな声を見つけました。</p><br>
+      <p>でも、日常に戻ると、<br>またいつものように<br>「大丈夫」と言ってしまう日があります。</p><br>
+      <p>だから、この先には<br>毎日ひとつずつ、<em>必要なことばを受け取りながら</em><br>進む14日間の小さな冒険があります。</p>
+    </div>
+
+    <div class="cta-divider"></div>
+
+    <a href="14days.html" class="btn-cta-main" target="_blank" rel="noopener">
+      🗝️ 次の扉をみてみる
+    </a>
+    <button class="btn-cta-sub" onclick="restartStory()">トップに戻る</button>
+  `;
+  clearSave();
+}
+
+// ==============================
+// スタート・リスタート
+// ==============================
+function startStory(){
+  const input = document.getElementById('name-input').value.trim();
+  userName = input || 'あなた';
+  document.getElementById('name-screen').style.display = 'none';
+  document.getElementById('story-screen').style.display = 'flex';
+  stepIndex = 0; bubbleIndex = 0; answers = {}; history = [];
+  saveState();
+  renderStep();
+}
+
+function restartStory(){
+  clearSave();
+  location.reload();
+}
+
+// ==============================
+// 起動：途中保存チェック → 名前入力表示
+// ==============================
+(function initApp(){
+  if(loadState()){
+    // 保存データあり
+    const resume = confirm(`「${userName}」として途中まで進んでいます。\n続きから始めますか？`);
+    if(resume){
+      document.getElementById('story-screen').style.display = 'flex';
+      renderStep();
+      return;
+    } else {
+      clearSave();
+    }
+  }
+  // 名前入力を表示
+  document.getElementById('name-screen').style.display = 'flex';
+})();
+
+// Enterキーで開始
+document.getElementById('name-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') startStory();
+});
+</script>
+</body>
+</html>
