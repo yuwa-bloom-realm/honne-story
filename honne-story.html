@@ -582,7 +582,7 @@ const CONFIG = {
   imgBase: './', // 画像フォルダのパス
 };
 let forestBgCount = 0; // 森背景の交互カウンター
-function forestBg(){ forestBgCount++; const f=forestBgCount%2===1?'02_forest_path_a.png':'02_forest_path_b.png'; const path=CONFIG.imgBase+f; console.log('forestBg path:', path); return path; }
+function forestBg(){ forestBgCount++; const f=forestBgCount%2===1?'02_forest_path_a.png':'02_forest_path_b.png'; return CONFIG.imgBase+f; }
 
 // ==============================
 // ステート
