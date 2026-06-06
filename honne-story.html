@@ -435,6 +435,98 @@ body {
   font-size: 0.75rem; color: rgba(201,168,76,0.4);
   letter-spacing: 0.1em;
 }
+
+/* ── タイトル画像オーバーレイ ── */
+.title-img-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 28px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.title-hero-img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  opacity: 0.9;
+}
+.title-img-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 24px 20px 20px;
+  background: linear-gradient(to top, rgba(12,9,22,0.92) 0%, rgba(12,9,22,0.4) 60%, transparent 100%);
+  text-align: center;
+}
+.title-img-overlay .app-title {
+  margin-bottom: 4px;
+  text-shadow: 0 0 20px rgba(201,168,76,0.5);
+}
+.title-img-overlay .app-subtitle {
+  margin-bottom: 0;
+}
+
+/* ── ランタン光演出 ── */
+.lantern-light-effect {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  background: radial-gradient(ellipse at center,
+    rgba(201,168,76,0) 0%,
+    rgba(201,168,76,0) 100%);
+  transition: background 0.8s ease;
+}
+.lantern-light-effect.lit {
+  background: radial-gradient(ellipse at center,
+    rgba(201,168,76,0.18) 0%,
+    rgba(201,168,76,0.08) 40%,
+    rgba(201,168,76,0) 75%);
+}
+.lantern-light-effect.fade-out {
+  background: radial-gradient(ellipse at center,
+    rgba(201,168,76,0) 0%,
+    rgba(201,168,76,0) 100%);
+  transition: background 1.2s ease;
+}
+
+/* ── 章末イラスト ── */
+.end-image-wrap {
+  margin: 24px 0 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+.end-image {
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 0 40px rgba(107,77,138,0.3);
+}
+
+/* ── 章タイトル背景画像 ── */
+.chapter-bg-img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  opacity: 0.75;
+}
+
+/* ── タイトル画面ヒーロー画像 ── */
+.title-hero-img {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  opacity: 0.88;
+  box-shadow: 0 0 40px rgba(107,77,138,0.4);
+}
 </style>
 </head>
 <body>
@@ -445,10 +537,13 @@ body {
 <div id="app">
   <!-- 名前入力画面 -->
   <div id="name-screen" style="display:none;">
-    <div class="title-ornament">✦ ✦ ✦</div>
-    <div class="title-lantern">🏮</div>
-    <h1 class="app-title">大丈夫の奥へ</h1>
-    <p class="app-subtitle">— 本音を見つける静かな旅 —</p>
+    <div class="title-img-wrap">
+      <img src="01_title_intro.png" class="title-hero-img" alt="大丈夫の奥へ" onerror="this.style.display='none'">
+      <div class="title-img-overlay">
+        <h1 class="app-title">大丈夫の奥へ</h1>
+        <p class="app-subtitle">— 本音を見つける静かな旅 —</p>
+      </div>
+    </div>
     <p class="intro-text">
       これは、「大丈夫」の奥にある<br>本音を見つける物語体験です。<br><br>
       物語の中で、あなたの名前を<br>呼びながら進んでいきます。<br><br>
@@ -687,7 +782,7 @@ const STEPS = [
   },
   // 場面11：次の気配（第1章末）
   {
-    image: '09_end_1_miia_usagi.png',
+    endImage: '09_end_1_miia_usagi.png',
     nextLabel: '次のモヤへ進む',
     bubbles: [
       { type:'narration',text:'あなたとミーア、そしてうさぎは、霧の森の奥へ進みます。' },
@@ -845,7 +940,7 @@ const STEPS = [
   },
   // 場面21（第2章末）
   {
-    image: '10_end_2_miia_usagi_hitsuji.png',
+    endImage: '10_end_2_miia_usagi_hitsuji.png',
     nextLabel: '羽音の方へ進む',
     bubbles: [
       { type:'narration',text:'うさぎとひつじが、あなたのそばに並びました。' },
@@ -1009,7 +1104,7 @@ const STEPS = [
   },
   // 場面31（第3章末）
   {
-    image: '11_end_3_miia_usagi_hitsuji_kotori.png',
+    endImage: '11_end_3_miia_usagi_hitsuji_kotori.png',
     nextLabel: '扉へ向かう',
     bubbles: [
       { type:'narration',text:'うさぎ、ひつじ、小鳥が、あなたのそばに並びました。' },
@@ -1175,7 +1270,7 @@ const STEPS = [
   },
   // 場面40：扉の前へ（第4章末）
   {
-    image: '12_end_4_miia_usagi_hitsuji_kotori_kitsune.png',
+    endImage: '12_end_4_miia_usagi_hitsuji_kotori_kitsune.png',
     nextLabel: '扉に手をかける',
     bubbles: [
       { type:'narration',text:'うさぎ、ひつじ、小鳥、キツネ。\n四匹が、あなたのそばに並びました。' },
@@ -1310,8 +1405,10 @@ function renderStep(){
     sceneImgArea.innerHTML = '';
     choicesArea.innerHTML = '';
     navBar.style.display = 'none';
+    const chapterBgSrc = CONFIG.imgBase + forestBg();
     storyArea.innerHTML = `
       <div class="chapter-screen">
+        <img src="${chapterBgSrc}" class="chapter-bg-img" alt="" onerror="this.style.display='none'">
         <div class="chapter-icon">${step.icon}</div>
         <p class="chapter-num">${step.chapterNum}</p>
         <h2 class="chapter-title">${step.chapterTitle}</h2>
@@ -1351,6 +1448,14 @@ function renderStep(){
 
   function showNextBubble(){
     if(shown >= bubbles.length){
+      // 章末イラストがあれば吹き出しの後に大きく表示
+      if(step.endImage){
+        const endImgWrap = document.createElement('div');
+        endImgWrap.className = 'end-image-wrap fade-in';
+        endImgWrap.innerHTML = `<img src="${CONFIG.imgBase}${step.endImage}" class="end-image" alt="" onerror="this.style.display='none'">`;
+        storyArea.appendChild(endImgWrap);
+        setTimeout(()=>{ endImgWrap.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 80);
+      }
       // 全部表示し終わったら選択肢 or 次へボタンを出す
       if(step.choices){
         inChoiceMode = true;
@@ -1410,6 +1515,13 @@ function makeBubble(b){
     return wrap;
   }
   if(b.type === 'narration-keyword'){
+    // 光が灯る演出オーバーレイ
+    const lightEl = document.createElement('div');
+    lightEl.className = 'lantern-light-effect';
+    wrap.appendChild(lightEl);
+    setTimeout(()=> lightEl.classList.add('lit'), 50);
+    setTimeout(()=> lightEl.classList.add('fade-out'), 1200);
+    setTimeout(()=> lightEl.remove(), 2000);
     const div = document.createElement('div');
     div.className = 'narration keyword';
     div.textContent = n(b.text);
