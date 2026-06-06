@@ -1405,11 +1405,10 @@ function renderStep(){
     sceneImgArea.innerHTML = '';
     choicesArea.innerHTML = '';
     navBar.style.display = 'none';
-    const chapterBgSrc = CONFIG.imgBase + forestBg();
+    const chapterBgSrc = forestBg();
     storyArea.innerHTML = `
       <div class="chapter-screen">
         <img src="${chapterBgSrc}" class="chapter-bg-img" alt="" onerror="this.style.display='none'">
-        <div class="chapter-icon">${step.icon}</div>
         <p class="chapter-num">${step.chapterNum}</p>
         <h2 class="chapter-title">${step.chapterTitle}</h2>
         <div class="chapter-line"></div>
