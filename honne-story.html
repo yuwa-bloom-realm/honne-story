@@ -582,7 +582,7 @@ const CONFIG = {
   imgBase: './', // 画像フォルダのパス
 };
 let forestBgCount = 0; // 森背景の交互カウンター
-function forestBg(){ forestBgCount++; return forestBgCount%2===1?'02a_forest_path.png':'02b_forest_path.png'; }
+function forestBg(){ forestBgCount++; const f=forestBgCount%2===1?'02a_forest_path.png':'02b_forest_path.png'; return CONFIG.imgBase+f; }
 
 // ==============================
 // ステート
@@ -626,7 +626,6 @@ const STEPS = [
     type: 'chapter',
     chapterNum: '第一章',
     chapterTitle: '霧の森とうさぎのモヤ',
-    icon: '🌫️',
   },
   // ─────────────────────────────
   // 場面2：霧の森
@@ -802,7 +801,6 @@ const STEPS = [
     type: 'chapter',
     chapterNum: '第二章',
     chapterTitle: 'ひつじのモヤ',
-    icon: '🌧️',
   },
   // 場面12
   {
@@ -959,7 +957,6 @@ const STEPS = [
     type: 'chapter',
     chapterNum: '第三章',
     chapterTitle: '小鳥のモヤ',
-    icon: '🐦',
   },
   // 場面22
   {
@@ -1125,7 +1122,6 @@ const STEPS = [
     type: 'chapter',
     chapterNum: '第四章',
     chapterTitle: '扉の前のキツネ',
-    icon: '🦊',
   },
   // 場面32
   {
@@ -1405,7 +1401,7 @@ function renderStep(){
     sceneImgArea.innerHTML = '';
     choicesArea.innerHTML = '';
     navBar.style.display = 'none';
-    const chapterBgSrc = forestBg();
+    const chapterBgSrc = forestBg(); // 02a/02b交互
     storyArea.innerHTML = `
       <div class="chapter-screen">
         <img src="${chapterBgSrc}" class="chapter-bg-img" alt="" onerror="this.style.display='none'">
