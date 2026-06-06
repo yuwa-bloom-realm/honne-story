@@ -582,7 +582,7 @@ const CONFIG = {
   imgBase: './', // 画像フォルダのパス
 };
 let forestBgCount = 0; // 森背景の交互カウンター
-function forestBg(){ forestBgCount++; const f=forestBgCount%2===1?'02a_forest_path.png':'02b_forest_path.png'; return CONFIG.imgBase+f; }
+function forestBg(){ forestBgCount++; const f=forestBgCount%2===1?'02a_forest_path.png':'02b_forest_path.png'; const path=CONFIG.imgBase+f; console.log('forestBg path:', path); return path; }
 
 // ==============================
 // ステート
@@ -1404,7 +1404,7 @@ function renderStep(){
     const chapterBgSrc = forestBg(); // 02a/02b交互
     storyArea.innerHTML = `
       <div class="chapter-screen">
-        <img src="${chapterBgSrc}" class="chapter-bg-img" alt="" onerror="this.style.display='none'">
+        <img src="${chapterBgSrc}" class="chapter-bg-img" alt="forest">
         <p class="chapter-num">${step.chapterNum}</p>
         <h2 class="chapter-title">${step.chapterTitle}</h2>
         <div class="chapter-line"></div>
